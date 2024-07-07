@@ -7,7 +7,7 @@ class PostForm(ModelForm):
         model= Post
         fields=['body']
         widgets = {
-            'body': forms.Textarea(attrs={'cols': 70, 'rows': 2}), # Customize text area size
+            'body': forms.Textarea(attrs={'cols': 70, 'rows': 2}), 
         }
         labels={
             'body':''

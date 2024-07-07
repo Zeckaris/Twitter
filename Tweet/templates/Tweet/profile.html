@@ -5,37 +5,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'styles/structure.css'%}">
+    <link rel="stylesheet" href="{% static 'styles/sidebar.css'%}">
+    <link rel="stylesheet" href="{% static 'styles/trends.css'%}">
+    <link rel="stylesheet" href="{% static 'styles/profile.css'%}">
+    <link rel="stylesheet" href="{% static 'styles/svgStyles.css'%}">
+    <link rel="stylesheet" href="{% static 'styles/tweetStyle.css'%}">
 </head>
-<body style="background-color:black; color:rgb(0, 136, 255); display:flex;
-   flex-direction:column; justify-content:space-between; align-items:center;">
+<body>
+    <div class="container">
+        <aside>
+            {%include 'Tweet/sidebar.html'%}
+        </aside>
+       
+        <main class="main-content">
+            <h1>Profile</h1>
+            {%if userProfile.profile_image %}
+            <img src="{{ userProfile.profile_image.url }}" alt="Profile Image" width="300px" >
+            {%else%}
+             <img src="{% static 'images/defaultAvatar.png' %}" alt="">
+            {%endif%}
+            <p><span>{{userProfile.user.username}}</span></p>
+            <p>Bio:</p>
+            <p>{{userProfile.bio}}</p>
 
-    <h1>Profile</h1>
-    {%if userProfile.profile_image %}
-    <img src="{{ userProfile.profile_image.url }}" alt="Profile Image" width="300px" style="border: 1px solid rgb(0, 136, 255);">
-    {%else%}
-     <img src="{% static 'images/defaultAvatar.png' %}" alt="">
-    {%endif%}
-    <p><span>{{userProfile.user.username}}</span></p>
-    <p>Bio:</p>
-    <p>{{userProfile.bio}}</p>
-    <div>
-        <p>Posts:</p>
-        {%for post in posts%}
-        <div style="border:1px solid rgba(2, 251, 2, 0.683); min-height: 80px; width:80vw; margin:10px;" >
-            <p>{{post.body}}</p>
-        </div>
+
+
+            <!-- <div>
+                <p>Posts:</p>
+                {%for tweet in tweets%}
+                <div>
+                    <p>{{tweet.body}}</p>
+                </div>
+                
+                {%endfor%}
+            </div> -->
+
+            {%include 'Tweet/postList.html'%}
+
         
-        {%endfor%}
-    </div>
+            <h2>Liked Tweets</h2>
 
-    <div>
-        <p>Liked Tweets:</p>
-        {%for like in likes%}
-        <div style="border:1px solid rgba(251, 147, 2, 0.683); min-height: 80px; width:80vw; margin:10px;" >
-        <p>{{like.post.body}}</p>
+            {%include 'Tweet/postList.html' with tweets=likedTweets%}
+            <!-- <div>
+                <p>Liked Tweets:</p>
+                {%for like in likes%}
+                <div>
+                <p>{{like.post.body}}</p>
+                </div>
+                {%endfor%}
+            </div> -->
+
+            <h2>Retweeted Tweets</h2>
+            {%include 'Tweet/postList.html' with tweets=retweetedPosts%}
+        </main>
+
+
+    
+        <div>
+            {%include 'Tweet/trends.html'%}
         </div>
-        {%endfor%}
     </div>
+    
+   
+    
 
 
     

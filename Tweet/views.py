@@ -285,12 +285,14 @@ def follow(request):
     
 def viewProfile(request):
     if request.method == 'GET':
-        userProfile=request.user.user_profile
-        posts= Post.objects.filter(Q(author=userProfile))
-        likedTweets=Like.objects.filter(Q(profile=userProfile))
-        retweetedPosts=Retweet.objects.filter(Q(profile=userProfile))
-        context={'userProfile':userProfile, 'posts':posts, 'likes':likedTweets, 'retweetedPosts':retweetedPosts}
-        return render(request,'Tweet/profile.html',context)
+        userProfile = request.user.user_profile
+        tweets = Post.objects.filter(author=userProfile)
+        likedTweets = Post.objects.filter(post_likes__profile=userProfile)
+        retweetedPosts = Post.objects.filter(post_retweets__profile=userProfile)
+        context = {'userProfile': userProfile,'tweets': tweets,'likedTweets': likedTweets,'retweetedPosts': retweetedPosts,}
+
+        return render(request, 'Tweet/profile.html', context)
+
     
 
 def searchBar(request):

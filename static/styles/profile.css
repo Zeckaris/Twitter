@@ -1,0 +1,7 @@
+.main-content {
+    background-color: #000000;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}

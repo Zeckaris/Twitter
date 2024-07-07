@@ -1,0 +1,23 @@
+<aside class="additionals">
+    <div class="searchBar">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="searchIcon">
+            <path d="M10.5 3a7.5 7.5 0 015.93 12.19l4.9 4.9-1.42 1.42-4.9-4.9A7.5 7.5 0 1110.5 3zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"></path>
+        </svg>
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'query' %}" method="GET" class="searchForm">
+            <input type="text" name="search_query" placeholder="Search Twitter">
+        </form>
+        {% endif %}
+    </div>
+    <div class="trendsForYou">
+        <h3>Trends For You</h3>
+        <ul>
+            {% for trend in trends %}
+            <li>
+                <a href="?hashtag={{ trend.title }}">{{ trend.title }}</a>
+                <p class="postCount">{{ trend.tweet_count }} posts</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</aside>
