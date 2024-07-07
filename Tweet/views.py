@@ -19,24 +19,31 @@ from .forms import PostForm, SearchQueryForm
 from .models import Post, Profile
 
 def home(request):
-    
     tweets = None
+    trends = HashTag.objects.annotate(tweet_count=Count('posts')).order_by('-tweet_count')[:10]
+    search_form = SearchQueryForm(request.GET)
+
     try:
         user = Profile.objects.get(user=request.user)
-    except:
-        user=None
+    except Profile.DoesNotExist:
+        user = None
 
-    if request.method == "GET":
-        
-        if user is not None:
-            if tweets is None:
-                tweets = Post.objects.annotate(
-                    num_retweets=Count('post_retweets', distinct=True),
-                    num_likes=Count('post_likes', distinct=True)
-                ).order_by('-created')
-                trends = HashTag.objects.annotate(tweet_count=Count('posts')).order_by('-tweet_count')[:10]
+    hashtag = request.GET.get('hashtag')
+    if hashtag:
+        tweets = Post.objects.filter(
+            hashtags__title=hashtag
+        ).distinct().annotate(
+            num_retweets=Count('post_retweets', distinct=True),
+            num_likes=Count('post_likes', distinct=True)
+        ).order_by('-created')
+    else:
+        if user:
+            tweets = Post.objects.annotate(
+                num_retweets=Count('post_retweets', distinct=True),
+                num_likes=Count('post_likes', distinct=True)
+            ).order_by('-created')
 
-        context = {'tweets': tweets, 'user': user,'trends':trends}
+    context = {'tweets': tweets,'user': user,'trends': trends,'search_form': search_form,'selected_hashtag': hashtag}
     return render(request, 'Tweet/home.html', context)
 
 
@@ -133,7 +140,6 @@ def post_tweet(request):
 @login_required
 def like_tweet(request, id):
     if request.method == 'POST':
-        print("=======================================================================",id,"=======================")
         post = get_object_or_404(Post, pk=id)
         profile = request.user.user_profile
         liked_previously = Like.objects.filter(post=post, profile=profile).first()
@@ -145,7 +151,7 @@ def like_tweet(request, id):
                 post=post,
                 profile=profile
             )
-        return redirect('home')  # Redirect to home page after action
+        return redirect('home') 
     else:
         return JsonResponse({'error': 'Invalid method'})
 
@@ -163,7 +169,7 @@ def retweet_post(request, id):
                 post=post,
                 profile=profile
             )
-        return redirect('home')  # Redirect to home page after action
+        return redirect('home')  
     else:
         return JsonResponse({'error': 'Invalid method'})
 
@@ -174,7 +180,7 @@ def delete_post(request, id):
         post = get_object_or_404(Post, pk=id)
         if request.user.user_profile == post.author:
             post.delete()
-        return redirect('home')  # Redirect to home page after action
+        return redirect('home') 
     else:
         return JsonResponse({'error': 'Invalid method'})
 
@@ -289,9 +295,12 @@ def viewProfile(request):
 
 def searchBar(request):
     search_form = SearchQueryForm(request.GET)
+    tweets = Post.objects.none()
+
     if request.method == 'GET' and search_form.is_valid():
         search_query = search_form.cleaned_data.get('search_query', '')
-
+        print(f"Search query: {search_query}")  
+        
         if search_query:
             tweets = Post.objects.filter(
                 Q(author__user__username__icontains=search_query) |
@@ -301,8 +310,10 @@ def searchBar(request):
                 num_retweets=Count('post_retweets', distinct=True),
                 num_likes=Count('post_likes', distinct=True)
             ).order_by('-created')
-            
-        return render(request, 'Tweeet/home.html', {'tweets':tweets})
+            print(f"SQL Query: {str(tweets.query)}")  
+
+    return render(request, 'Tweet/home.html', {'tweets': tweets})
+
 
 
 

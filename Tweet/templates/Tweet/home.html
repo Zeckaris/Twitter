@@ -78,7 +78,7 @@
                                 </div>
                             </div>
 
-                           <a href= "{% url 'viewPost' id=tweet.id %}">
+                           <a href= "{% url 'viewPost' id=tweet.id %}" class="noDecorations">
                             <div class="tweet-body-div">
                                 <p class="tweet-body">{{ tweet.body }}</p>
                             </div>
@@ -166,7 +166,7 @@
                 </svg>
                 {% if request.user.is_authenticated %}
                 <form action="{% url 'query' %}" method="GET" class="searchForm">
-                    <input type="text" name="search" placeholder="Search Twitter">
+                    <input type="text" name="search_query" placeholder="Search Twitter">
                 </form>
                 {% endif %}
             </div>
@@ -175,7 +175,7 @@
                 <ul>
                     {% for trend in trends %}
                     <li>
-                        <a href="">{{ trend.title }}</a>
+                        <a href="?hashtag={{ trend.title }}">{{ trend.title }}</a>
                         <p class="postCount">{{ trend.tweet_count }} posts</p>
                     </li>
                     {% endfor %}

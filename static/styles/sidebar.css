@@ -208,6 +208,9 @@ svg path {
     border-radius: 50%;
     margin-right: 10px;
 }
+.noDecorations{
+    text-decoration: none;
+}
 
 .tweet-info {
     display: flex;

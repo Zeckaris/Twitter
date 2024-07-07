@@ -18,4 +18,5 @@ urlpatterns = [
     path('follow/', views.follow , name='follow'),
     path('viewProfile/', views.viewProfile, name='viewProfile'),
     path('query/', views.searchBar, name='query'),
+    
 ]
