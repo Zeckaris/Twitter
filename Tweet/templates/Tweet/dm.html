@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {%block content%}
+    <div style="display:grid; grid-template-columns:50vw 30vw; grid-template-rows:100vh; grid-gap:15vw;">
+        <div>
+            <h2>My messages</h2>
+            {% for message in messages%}
+            <div style="margin:1rem; padding:1rem;">
+                {{message.receiver}} <br>
+                <p>{{message.body}}</p>
+            </div>
+            {%endfor%}
+        </div>
+       
+       <div>
+        <form action="{% url 'sendDm'%}" method="post">
+            {%csrf_token%}
+            <label for="username">receiver</label><br>
+            <input type="text" name="username" id="username" placeholder="Username"><br>
+            <label for="message">Message</label><br>
+            <textarea name="message" id="message" cols="30" rows="10"></textarea><br>
+            <input type="submit"><br>
+        </form>
+       </div>
+       
+    </div>
+    
+
+    {%endblock%}
+</body>
+</html>

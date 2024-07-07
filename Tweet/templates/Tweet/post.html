@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {%block content%}
+    <div>
+        <p>{{post.body}}</p>
+        <p>{{post.author}} {{post.created}}</p>
+        <div style="display:flex; justify-content:space-evenly;">
+            <div>{{post.num_likes}}</div>
+            <div>{{post.num_retweets}}</div>
+        </div>
+        <p><form action="{% url 'like' id=post.id %}" method="GET"><input type="submit" value="Like"></form></p>
+        <p><form action="{% url 'retweet' id=post.id %}" method="GET"><input type="submit" value="Retweet"></form></p>
+    </div>
+    <div>
+        <form action="{% url 'reply' id=post.id %}" method="POST">
+            {%csrf_token%}
+            {{replyform.as_p}}
+            <input type="submit" value="Reply">
+        </form>
+    </div>
+
+    <div>
+        {%for rply in replies%}
+        <p>{{rply.content}} <form action="{% url 'rr' id=rply.id pid=post.id %}" method="POST">{%csrf_token%} {{replyform}} <input type="submit" value="Reply"></form></p>
+        <p>{{rply.author}}  {{rply.created}}</p>
+        {%endfor%}
+    </div>
+
+
+    {%endblock%}
+</body>
+</html>

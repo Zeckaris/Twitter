@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {%block content%}
+    {%if page == 'signup'%}
+    <form action="{% url 'signup' %}" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        {{form.as_p}}
+        <br>
+        <label for="bio">Bio</label>
+        <textarea name="bio" id="bio" cols="30" rows="10">One Earth</textarea>
+        <label for="profileImage">Profile Image</label>
+        <input type="file" name="profileImage" id="profileImage">
+        <input type="submit" value="SignUp">
+    </form>
+    {%elif page == 'login' %}
+        <form action="{% url 'login'%}" method="POST">
+            {%csrf_token%}
+            <label for="username">Username</label><br>
+            <input type="text" name="username" id="username"><br>
+            <label for="password">Password</label><br>
+            <input type="password" name="password" id="password"><br>
+            <input type="submit" value="Login">
+        </form>
+    {%endif%}
+
+    {%endblock%}
+</body>
+</html>
