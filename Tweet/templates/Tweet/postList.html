@@ -7,7 +7,7 @@
                 <div class="tweet-header">
                     <img src="{% if tweet.author.profile_image %}{{ tweet.author.profile_image.url }}{% else %}{% static 'images/defaultAvatar.png' %}{% endif %}" alt="Profile Image">
                     <div class="tweet-info">
-                        <span class="tweet-author">{{ tweet.author.user.username }}</span>
+                        <a href="{% url 'viewProfile' username=tweet.author.user.username%}" class="noDecorations"><span class="tweet-author">{{ tweet.author.user.username }}</span></a>
                         <span class="tweet-time">{{ tweet.created }}</span>
                     </div>
                 </div>

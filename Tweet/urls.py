@@ -16,7 +16,7 @@ urlpatterns = [
     path('replycursive/<int:id>/<int:pid>', views.reply_to_reply, name='rr'),
     path('sendDM/', views.send_DM , name='sendDm'),
     path('follow/', views.follow , name='follow'),
-    path('viewProfile/', views.viewProfile, name='viewProfile'),
+    path('viewProfile/<str:username>/', views.viewProfile, name='viewProfile'),
     path('query/', views.searchBar, name='query'),
     
 ]

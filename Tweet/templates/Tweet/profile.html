@@ -33,7 +33,16 @@
                 </div>
             </div>
             <div class="profile-info">
-                <h1>{{ userProfile.user.username }}</h1>
+                <div class="profile-info-header">
+                    <h4>{{ userProfile.user.username }}</h4>
+                    {% if request.user != userProfile.user %}
+                        <form action="{% url 'follow' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="personality" value="{{ userProfile.user.username }}">
+                            <button type="submit">Follow</button>
+                        </form>
+                    {% endif %}
+                </div>
                 <p>Bio: {{ userProfile.bio }}</p>
             </div>
 

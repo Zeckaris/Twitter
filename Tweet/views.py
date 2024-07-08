@@ -16,7 +16,7 @@ import re
 from django.shortcuts import render, redirect
 from django.db.models import Q, Count
 from .forms import PostForm, SearchQueryForm
-from .models import Post, Profile
+from .models import Post, Profile,Follow
 
 def home(request):
     tweets = None
@@ -268,32 +268,34 @@ def send_DM(request):
         else:
             raise ValidationError('You can not dm your self')
         return redirect('sendDm')
-        
+  
         
 def follow(request):
-    
     if request.method == 'GET':
-        query= request.GET.get('username','')
-        usernameList=Profile.objects.filter(Q(user__username__icontains=query))
-        return render(request,'Tweet/home.html',{'profileList':usernameList})
-    
-    if request.method == 'POST':
-        followerProfile= Profile.objects.get(user=request.user)
-        personality=request.POST.get('personality')
+        query = request.GET.get('username', '')
+        usernameList = Profile.objects.filter(Q(user__username__icontains=query))
+        return render(request, 'Tweet/home.html', {'profileList': usernameList})
+
+    elif request.method == 'POST':
+        followerProfile = Profile.objects.get(user=request.user)
+        personality = request.POST.get('personality')
         try:
-            profile= Profile.objects.get(personality)
-        except User.DoesNotExist:
+            profile = Profile.objects.get(user__username=personality)
+        except Profile.DoesNotExist:
             raise ValidationError('The provided user does not exist')
-        
+
         Follow.objects.create(
-            follower= followerProfile, 
-            followed= personality
-        )        
-        return render(request, 'Tweet/home.html')
+            follower=followerProfile, 
+            followed=profile
+        )
+        return redirect('profile', username=personality)
     
-def viewProfile(request):
+    
+    
+    
+def viewProfile(request,username):
     if request.method == 'GET':
-        userProfile = request.user.user_profile
+        userProfile = get_object_or_404(Profile, user__username=username)
         tweets = Post.objects.filter(author=userProfile)
         likedTweets = Post.objects.filter(post_likes__profile=userProfile)
         retweetedPosts = Post.objects.filter(post_retweets__profile=userProfile)
