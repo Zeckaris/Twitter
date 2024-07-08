@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <div class="post">
     {% if request.user.is_authenticated %}
         <hr>
@@ -12,19 +12,20 @@
                     </div>
                 </div>
 
-               <a href= "{% url 'viewPost' id=tweet.id %}" class="noDecorations">
-                <div class="tweet-body-div">
-                    <p class="tweet-body">{{ tweet.body }}</p>
-                </div>
-                
-               </a>
-                   
+                <a href="{% url 'viewPost' id=tweet.id %}" class="noDecorations">
+                    <div class="tweet-body-div">
+                        <p class="tweet-body">{{ tweet.body }}</p>
+                        {% if tweet.image %}
+                            <img src="{{ tweet.image.url }}" alt="Tweet Image" class="tweet-image">
+                        {% endif %}
+                    </div>
+                </a>
+
                 <div class="tweet-actions">
                     <span class="tweet-action">
-                        <svg>       </svg>
-                        
+                        <svg></svg>
                     </span>
-                    
+
                     <div>
                         <form action="{% url 'retweet' id=tweet.id %}" method="POST" style="display: inline-block; position: relative;">
                             {% csrf_token %}
@@ -40,7 +41,6 @@
                         </form>
                         <span class="retweet-count">{{ tweet.num_retweets }}</span>
                     </div>
-                    
 
                     <div>
                         <form action="{% url 'like' id=tweet.id %}" method="POST" style="display: inline-block; position: relative;">
@@ -57,11 +57,9 @@
                         </form>
                         <span class="like-count">{{ tweet.num_likes }}</span>
                     </div>
-                    
-                
-                   
+
                     <span class="tweet-action">
-                        <svg>   </svg>
+                        <svg></svg>
                     </span>
                 </div>
                 <div class="tweet-buttons">

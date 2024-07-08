@@ -7,6 +7,8 @@ import re
 class Profile(models.Model):
     user=                   models.OneToOneField(User,on_delete=models.CASCADE , blank=False, null=False, related_name='user_profile')
     bio=                    models.CharField(verbose_name='Biography', blank=True , null= True, max_length=100)
+    creation_date=          models.DateTimeField(verbose_name='Date Of Creation', auto_now_add=True ,blank=True, null=True)
+    coverPicture=           models.ImageField(upload_to='coverPicture/',blank=True,null=True)
 
     
     profile_image =         models.ImageField(upload_to='profile_images/',blank=True, null= True )    
@@ -31,6 +33,7 @@ class Post(models.Model):
     created=                models.DateTimeField(auto_now=True)
     author=                 models.ForeignKey(Profile,related_name='posts', on_delete=models.CASCADE, blank=False, null=False)
     hashtags=               models.ManyToManyField(HashTag,related_name='posts' ,blank=True)
+    image=                  models.ImageField(upload_to='postPictures/',blank=True, null=True)
     def __str__(self):
         return f'{self.author.user.username}  \n {self.body[:50]}'   
     

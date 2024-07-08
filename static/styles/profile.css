@@ -4,4 +4,47 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    color: white;
+}
+
+.profile-header {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin-bottom: 80px; 
+}
+
+.coverPicture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-bottom: 2px solid #38444d;
+}
+
+.profile-picture-container {
+    position: absolute;
+    bottom: -40px;
+    left: 20px;
+    border: 5px solid #000;
+    border-radius: 50%;
+}
+
+.profile-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info {
+    margin-top: 40px;
+    padding: 0 20px;
+}
+
+.profile-info h1 {
+    margin: 0;
+}
+
+.profile-info p {
+    margin: 5px 0;
 }

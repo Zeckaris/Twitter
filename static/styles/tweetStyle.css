@@ -1,8 +1,8 @@
 .post {
     padding: 20px;
-    height: max-content;
     border-bottom: 1px solid #38444d;
 }
+
 .tweet {
     padding: 15px;
     background-color: #23c9ea0f;
@@ -23,7 +23,8 @@
     border-radius: 50%;
     margin-right: 10px;
 }
-.noDecorations{
+
+.noDecorations {
     text-decoration: none;
 }
 
@@ -49,7 +50,14 @@
 
 .tweet-body-div {
     width: 100%;
-    height: 50px;
+}
+
+.tweet-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit:contain;
+    border-radius: 10px;
+    margin-top: 10px;
 }
 
 .tweet-actions {

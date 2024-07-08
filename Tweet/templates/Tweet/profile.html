@@ -1,76 +1,53 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="{% static 'styles/structure.css'%}">
-    <link rel="stylesheet" href="{% static 'styles/sidebar.css'%}">
-    <link rel="stylesheet" href="{% static 'styles/trends.css'%}">
-    <link rel="stylesheet" href="{% static 'styles/profile.css'%}">
-    <link rel="stylesheet" href="{% static 'styles/svgStyles.css'%}">
-    <link rel="stylesheet" href="{% static 'styles/tweetStyle.css'%}">
+    <link rel="stylesheet" href="{% static 'styles/structure.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/trends.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/svgStyles.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/tweetStyle.css' %}">
 </head>
 <body>
     <div class="container">
         <aside>
-            {%include 'Tweet/sidebar.html'%}
+            {% include 'Tweet/sidebar.html' %}
         </aside>
-       
         <main class="main-content">
-            <h1>Profile</h1>
-            {%if userProfile.profile_image %}
-            <img src="{{ userProfile.profile_image.url }}" alt="Profile Image" width="300px" >
-            {%else%}
-             <img src="{% static 'images/defaultAvatar.png' %}" alt="">
-            {%endif%}
-            <p><span>{{userProfile.user.username}}</span></p>
-            <p>Bio:</p>
-            <p>{{userProfile.bio}}</p>
-
-
-
-            <!-- <div>
-                <p>Posts:</p>
-                {%for tweet in tweets%}
-                <div>
-                    <p>{{tweet.body}}</p>
+            <div class="profile-header">
+                {% if userProfile.coverPicture %}
+                    <img src="{{ userProfile.coverPicture.url }}" alt="Cover picture" class="coverPicture">
+                {% else %}
+                    <img src="{% static 'images/defaultCoverPicture.png' %}" alt="Cover picture" class="coverPicture">
+                {% endif %}
+                <div class="profile-picture-container">
+                    {% if userProfile.profile_image %}
+                        <img src="{{ userProfile.profile_image.url }}" alt="Profile Image" class="profile-picture">
+                    {% else %}
+                        <img src="{% static 'images/defaultAvatar.png' %}" alt="Profile Image" class="profile-picture">
+                    {% endif %}
                 </div>
-                
-                {%endfor%}
-            </div> -->
+            </div>
+            <div class="profile-info">
+                <h1>{{ userProfile.user.username }}</h1>
+                <p>Bio: {{ userProfile.bio }}</p>
+            </div>
 
-            {%include 'Tweet/postList.html'%}
-
-        
+            {% include 'Tweet/postList.html' %}
+            
             <h2>Liked Tweets</h2>
-
-            {%include 'Tweet/postList.html' with tweets=likedTweets%}
-            <!-- <div>
-                <p>Liked Tweets:</p>
-                {%for like in likes%}
-                <div>
-                <p>{{like.post.body}}</p>
-                </div>
-                {%endfor%}
-            </div> -->
-
+            {% include 'Tweet/postList.html' with tweets=likedTweets %}
+            
             <h2>Retweeted Tweets</h2>
-            {%include 'Tweet/postList.html' with tweets=retweetedPosts%}
+            {% include 'Tweet/postList.html' with tweets=retweetedPosts %}
         </main>
-
-
-    
         <div>
-            {%include 'Tweet/trends.html'%}
+            {% include 'Tweet/trends.html' %}
         </div>
     </div>
-    
-   
-    
-
-
-    
 </body>
 </html>

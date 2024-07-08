@@ -8,7 +8,7 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 130px auto 320px;
+    grid-template-columns: 150px auto 440px;
     height: 100vh;
     overflow-x: hidden; 
 }

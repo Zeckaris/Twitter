@@ -3,32 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Signup</title>
+    <style>
+        /* Add custom styles here */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="password"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    {%block content%}
-    {%if page == 'signup'%}
+    {% block content %}
+    {% if page == 'signup' %}
     <form action="{% url 'signup' %}" method="POST" enctype="multipart/form-data">
-        {%csrf_token%}
-        {{form.as_p}}
-        <br>
-        <label for="bio">Bio</label>
-        <textarea name="bio" id="bio" cols="30" rows="10">One Earth</textarea>
-        <label for="profileImage">Profile Image</label>
-        <input type="file" name="profileImage" id="profileImage">
-        <input type="submit" value="SignUp">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" value="{{ form.username.value|default_if_none:'' }}">
+            {% if form.username.errors %}
+                <div class="error">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="password1">Password</label>
+            <input type="password" name="password1" id="password1">
+            {% if form.password1.errors %}
+                <div class="error">{{ form.password1.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            <input type="password" name="password2" id="password2">
+            {% if form.password2.errors %}
+                <div class="error">{{ form.password2.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea name="bio" id="bio" cols="30" rows="10">{{ form.bio.value|default_if_none:'' }}</textarea>
+            {% if form.bio.errors %}
+                <div class="error">{{ form.bio.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="profile_image">Profile Image</label>
+            <input type="file" name="profile_image" id="profile_image">
+            {% if form.profile_image.errors %}
+                <div class="error">{{ form.profile_image.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="cover_picture">Cover Picture</label>
+            <input type="file" name="cover_picture" id="cover_picture">
+            {% if form.cover_picture.errors %}
+                <div class="error">{{ form.cover_picture.errors }}</div>
+            {% endif %}
+        </div>
+        <input type="submit" value="Sign Up">
     </form>
-    {%elif page == 'login' %}
-        <form action="{% url 'login'%}" method="POST">
-            {%csrf_token%}
-            <label for="username">Username</label><br>
-            <input type="text" name="username" id="username"><br>
-            <label for="password">Password</label><br>
-            <input type="password" name="password" id="password"><br>
+    {% elif page == 'login' %}
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password">
+            </div>
             <input type="submit" value="Login">
         </form>
-    {%endif%}
-
-    {%endblock%}
+    {% endif %}
+    {% endblock %}
 </body>
 </html>

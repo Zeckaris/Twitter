@@ -1,7 +1,7 @@
 from django.forms import ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render,get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 from django.urls import reverse
 from .models import Profile, Reply, Post,Mention,HashTag,Follow,Retweet,Like,DM
 from django.contrib.auth.models import User
@@ -22,11 +22,16 @@ def home(request):
     tweets = None
     trends = HashTag.objects.annotate(tweet_count=Count('posts')).order_by('-tweet_count')[:10]
     search_form = SearchQueryForm(request.GET)
-
-    try:
-        user = Profile.objects.get(user=request.user)
-    except Profile.DoesNotExist:
+    
+    if request.user.is_authenticated:
+        try:
+            user = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            user = None
+    else:
         user = None
+
+   
 
     hashtag = request.GET.get('hashtag')
     if hashtag:
@@ -47,45 +52,48 @@ def home(request):
     return render(request, 'Tweet/home.html', context)
 
 
+@login_required
 def create_post(request):
     if request.method == 'POST':
-        post_form = PostForm(request.POST)
+        post_form = PostForm(request.POST, request.FILES)
         if post_form.is_valid():
             post = post_form.save(commit=False)
-            post.author= Profile.objects.get(user=request.user)
-            
+            post.author = Profile.objects.get(user=request.user)
             post.save()
-            return redirect('home')  
-    return redirect('home')  
-
+            return redirect('home')
+    return redirect('home')
 
 
 
 def signup(request):
-    page='signup'
+    page = 'signup'
     if request.method == 'GET':
-        form= UserCreationForm()
-        context= {'form':form, 'page':page}
+        form = CustomUserCreationForm()
+        context = {'form': form, 'page': page}
         return render(request, 'Tweet/signup.html', context)
     
     if request.method == 'POST':
-        form= UserCreationForm(request.POST)
-        biography=request.POST.get('bio')
-        profileImage=request.FILES.get('profileImage')
+        form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            user= form.save(commit=False)
-            user.username.lower()
+            user = form.save(commit=False)
+            user.username = form.cleaned_data['username'].lower()
             user.save()
             login(request, user)
-            userProfile=Profile.objects.create(
+
+            Profile.objects.create(
                 user=user,
-                bio= biography,
-                profile_image= profileImage
+                bio=form.cleaned_data.get('bio', ''),
+                profile_image=form.cleaned_data.get('profile_image', None),
+                coverPicture=form.cleaned_data.get('cover_picture', None)
             )
             return redirect('home')
         else:
             messages.error(request, 'An error occurred during registration')
-        return redirect('signup')
+            context = {'form': form, 'page': page}
+            return render(request, 'Tweet/signup.html', context)
+        
+        
+        
         
 @login_required
 def logout_page(request):

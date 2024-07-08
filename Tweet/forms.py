@@ -1,16 +1,36 @@
 from django.forms import ModelForm
 from .models import Post, Retweet,Reply
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
-class PostForm(ModelForm):
+
+class CustomUserCreationForm(UserCreationForm):
+    bio = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': 30, 'rows': 10}))
+    profile_image = forms.ImageField(required=False)
+    cover_picture = forms.ImageField(required=False)
+
     class Meta:
-        model= Post
-        fields=['body']
+        model = User
+        fields = ['username', 'password1', 'password2', 'bio', 'profile_image', 'cover_picture']
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if not username.startswith('@'):
+            raise forms.ValidationError("Username must start with '@'")
+        return username
+    
+    
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['body', 'image']
         widgets = {
-            'body': forms.Textarea(attrs={'cols': 70, 'rows': 2}), 
+            'body': forms.Textarea(attrs={'cols': 70, 'rows': 2}),
         }
-        labels={
-            'body':''
+        labels = {
+            'body': ''
         }
         
         
